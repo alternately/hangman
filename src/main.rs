@@ -21,6 +21,7 @@ fn main() {
         fouls = wrong_guesses.len();
         if fouls >= 8 {
             println!("URK! you have been hanged");
+            println!("The word you were looking for was {}", &word);
             break;
         }
         // get a new letter, and decide if it is a good letter or a bad letter
