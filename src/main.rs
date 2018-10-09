@@ -5,12 +5,31 @@ fn main() {
     let word: String = String::from("foobar");
     let mut right_guesses: Vec<String> = Vec::new();
     let mut wrong_guesses: Vec<String> = Vec::new();
+    let mut fouls: usize;
+
+    //set up the game
+    display_progress(&right_guesses, &wrong_guesses, &word);
+    println!("Begin guessing");
     
     
     loop{
-        
+        //update the fouls score, and check to see if the player has lost
+        fouls = wrong_guesses.len();
+        if fouls >= 8 {
+            println!("URK! you have been hanged");
+            break;
+        }
+        // get a new letter, and decide if it is a good letter or a bad letter
+        let new_guess = get_letter();
+        if word.contains(&new_guess){
+            right_guesses.push(new_guess);
+        } else {
+            wrong_guesses.push(new_guess);
+        }
+        //display the player's progress
         display_progress(&right_guesses, &wrong_guesses, &word);
-        &right_guesses.push(get_letter());
+
+        //check and see if the player has won
         if final_check(right_guesses.clone(), word.clone()){
             display_progress(&right_guesses, &wrong_guesses, &word);
             println!("Good Job!");
@@ -71,7 +90,11 @@ fn display_progress(rights: &Vec<String>, wrongs: &Vec<String>, word: &String){
     for c in printstring {
         print!("{}", c);
     }
-    println!("");
+    print!("\nwrong guesses: ");
+    for w in wrongs{
+        print!("{},", w);
+    }
+    println!("\nfouls: {}/8", wrongs.len());
 }
 
 
