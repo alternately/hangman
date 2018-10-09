@@ -1,8 +1,12 @@
-
+use std::fs::File;
+use std::io::prelude::*;
 use std::io;
+extern crate rand;
 
 fn main() {
-    let word: String = String::from("foobar");
+    let dict = open_dictionary();
+    
+    let word: String = pick_word(dict);
     let mut right_guesses: Vec<String> = Vec::new();
     let mut wrong_guesses: Vec<String> = Vec::new();
     let mut fouls: usize;
@@ -111,4 +115,30 @@ fn final_check(final_guess: Vec<String>, correct_answer: String) -> bool{
     }
     
     check
+}
+
+fn str_collect(input: String) -> Vec<String> {
+    let mut output: Vec<String> = Vec::new();
+    let iter = input.lines();
+    for s in iter{
+        output.push(s.to_string());
+    }
+    output
+}
+
+//time consuming dictionary open should be run only once.
+fn open_dictionary() -> Vec<String>{
+    let mut file = File::open("english-words/words.txt").expect("Couldn't find the file");
+    let mut contents = String::new();
+    file.read_to_string(&mut contents);
+    str_collect(contents)
+}
+
+fn pick_word(dictionary: Vec<String>) -> String{
+    use rand::Rng;
+    let mut rng = rand::thread_rng();
+    let choice: usize = rng.gen_range(0, dictionary.len());
+    let out: String = dictionary[choice].clone();
+    out
+        
 }
